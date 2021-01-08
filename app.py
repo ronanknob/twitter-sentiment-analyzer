@@ -8,6 +8,7 @@ from tweepy.streaming import StreamListener
 from csv import writer
 from textblob import TextBlob as tb
 from textblob import exceptions as errors
+from googletrans import Translator
 
 local_file_name = "tweets_output.csv"
 
@@ -27,11 +28,10 @@ class Listener(StreamListener):
             csv_file.close()
     
     def _classify_sentiment(self, tweet_text):
-        analysis = tb(tweet_text)
         try:
-            tweet_translated = tb(str(analysis.translate(to='en')))
-        except errors.NotTranslated:
-            tweet_translated = analysis
+            tweet_translated = tb(translator.translate(tweet_text, 'en'))
+        except:
+            tweet_translated = tb(tweet_text)
 
 
         polarity = tweet_translated.sentiment.polarity
@@ -53,7 +53,10 @@ class Listener(StreamListener):
         print(status_code)
         return False
 
+
+# APP FLOW ----------
 listener = Listener()
+translator = Translator()
 stream = Stream(auth=api.auth, listener=listener)
 try:
     print('Streaming start. Collecting Portuguese tweets...')
