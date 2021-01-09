@@ -10,6 +10,7 @@ from textblob import exceptions as errors
 from googletrans import Translator
 
 import credentials
+import parser
 
 local_file_name = "tweets_output.csv"
 
@@ -57,11 +58,13 @@ class Listener(StreamListener):
                 tweet_text = status.extended_tweet["full_text"]
             except AttributeError:
                 tweet_text = status.text
-
+        
+        # Do some text cleaning in the tweet text
+        tweet_treated = parser.parse_tweet(tweet_text)
         # In this method, we call sentiment analysis and persist the tweet text and the results on a CSV.
-        sentiment = self._classify_sentiment(tweet_text)
+        sentiment = self._classify_sentiment(tweet_treated)
         # I've removed the commas from tweet text to don't crash csv identation
-        self._persist_result(status.text.replace(",",""), sentiment)
+        self._persist_result(tweet_treated.replace(",",""), sentiment)
 
     def on_error(self, status_code):
         print(status_code)
@@ -76,7 +79,7 @@ try:
     print('Streaming start. Collecting Portuguese tweets...')
     stream.sample(languages=['pt'])
 except KeyboardInterrupt:
-    print(" -> Keyboard stop required.")
+    print(" -> Keyboard stop requested.")
 finally:
     print('-> Disconected from stream.')
     stream.disconnect()
