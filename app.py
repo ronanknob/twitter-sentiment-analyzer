@@ -1,5 +1,4 @@
 import sys
-import credentials
 
 from tweepy import OAuthHandler
 from tweepy import API
@@ -9,6 +8,8 @@ from csv import writer
 from textblob import TextBlob as tb
 from textblob import exceptions as errors
 from googletrans import Translator
+
+import credentials
 
 local_file_name = "tweets_output.csv"
 
@@ -44,8 +45,21 @@ class Listener(StreamListener):
 
     
     def on_status(self, status):
+        # Deal with Retweets. The logic belos prints the full text of the Tweet, or if it’s a Retweet, the full text of the Retweeted Tweet
+        # Source http://docs.tweepy.org/en/latest/extended_tweets.html
+        if hasattr(status, "retweeted_status"):  # Check if Retweet
+            try:
+                tweet_text = status.retweeted_status.extended_tweet["full_text"]
+            except AttributeError:
+                tweet_text = status.retweeted_status.text
+        else:
+            try:
+                tweet_text = status.extended_tweet["full_text"]
+            except AttributeError:
+                tweet_text = status.text
+
         # In this method, we call sentiment analysis and persist the tweet text and the results on a CSV.
-        sentiment = self._classify_sentiment(status.text)
+        sentiment = self._classify_sentiment(tweet_text)
         # I've removed the commas from tweet text to don't crash csv identation
         self._persist_result(status.text.replace(",",""), sentiment)
 
