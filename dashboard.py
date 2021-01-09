@@ -18,7 +18,7 @@ app.layout = html.Div(children=[
     html.H1(children='Twitter real-time sentiment analysis'),
 
     html.Div(children='''
-        The tweets are being analyzed in real-time and the sum are the following:
+        The tweets are being analyzed in real-time and the results are the following:
     '''),
 
     dcc.Graph(
