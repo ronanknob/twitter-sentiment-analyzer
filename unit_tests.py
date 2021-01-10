@@ -1,6 +1,7 @@
 import unittest
 
 import parser
+import analyzer
 
 class TwitterTestSuite(unittest.TestCase):
 
@@ -39,6 +40,10 @@ class TwitterTestSuite(unittest.TestCase):
                     #protecaodedados #cybersecurity #esporte"""
         
         self.assertEqual("Hackers continuam atacando os clubes de", parser.parse_tweet(tweet))
+    
+    def test_should_predict_phrases_correctly(self):
+        self.assertEqual('Positivo', analyzer.classify_tweet('O prefeito de São Paulo está fazendo um ótimo trabalho'))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -2,3 +2,4 @@ tweepy==3.10.0
 textblob==0.15.3
 googletrans==3.0.0
 dash==1.18.1
+scikit-learn==0.24.0

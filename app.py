@@ -11,6 +11,7 @@ from googletrans import Translator
 
 import credentials
 import parser
+import analyzer
 
 local_file_name = "tweets_output.csv"
 
@@ -29,22 +30,6 @@ class Listener(StreamListener):
             writer_object.writerow([tweet_text, sentiment])
             csv_file.close()
     
-    def _classify_sentiment(self, tweet_text):
-        try:
-            tweet_translated = tb(translator.translate(tweet_text, 'en'))
-        except:
-            tweet_translated = tb(tweet_text)
-
-
-        polarity = tweet_translated.sentiment.polarity
-        # Sentiments are numbers within the range -1 (negative) to 1 (positive)
-        # I've considered 0 (neutral) as positive sentiment.
-        if polarity < 0:
-            return "negative"
-        else:
-            return "positive"
-
-    
     def on_status(self, status):
         # Deal with Retweets. The logic belos prints the full text of the Tweet, or if it’s a Retweet, the full text of the Retweeted Tweet
         # Source http://docs.tweepy.org/en/latest/extended_tweets.html
@@ -62,7 +47,7 @@ class Listener(StreamListener):
         # Do some text cleaning in the tweet text
         tweet_treated = parser.parse_tweet(tweet_text)
         # In this method, we call sentiment analysis and persist the tweet text and the results on a CSV.
-        sentiment = self._classify_sentiment(tweet_treated)
+        sentiment = analyzer.classify_tweet(tweet_treated)
         # I've removed the commas from tweet text to don't crash csv identation
         self._persist_result(tweet_treated.replace(",",""), sentiment)
 
@@ -71,7 +56,7 @@ class Listener(StreamListener):
         return False
 
 
-# APP FLOW ----------
+# Main flow
 listener = Listener()
 translator = Translator()
 stream = Stream(auth=api.auth, listener=listener)
