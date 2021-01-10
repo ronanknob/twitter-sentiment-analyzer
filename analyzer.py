@@ -1,11 +1,6 @@
-import nltk
-import re
 import pandas as pd
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn import metrics
-from sklearn.model_selection import cross_val_predict
 
 def classify_tweet(tweet):
     # Load training dataset
@@ -30,17 +25,6 @@ def classify_tweet(tweet):
     model = MultinomialNB()
     # Train the model with the training data and the classes in the dataset
     model.fit(freq_tweets, classes)
-
-    # Accuracy report commands (uncomment and run to print)
-    # results = cross_val_predict(model, freq_tweets, classes, cv = 10)
-    # print(f"General accuracy: {metrics.accuracy_score(classes, results)}")
-
-    # # Detailed accuracy report
-    # sentiments = ['Positivo', 'Negativo', 'Neutro']
-    # print(metrics.classification_report(classes, results, sentiments))
-
-    # # Confusion matrix
-    # print(pd.crosstab(classes, results, rownames = ["Real"], colnames = ["Predicted"], margins = True))
     
     tweet_transformed = vectorizer.transform([tweet])
     predicted = model.predict(tweet_transformed)

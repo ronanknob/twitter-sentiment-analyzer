@@ -1,7 +1,7 @@
 # Twitter sentiment analyzer
 
 ## Objective
-This app aims to collect a stream of Portuguese tweets from Twitter API. The app analyzes the tweet text and classifies the sentiment of the text as **positive** or **negative**. The app stores the original tweet text and the resulting sentiment into a CSV file, which is plotted with live updates into an HTML dashboard.
+This app aims to collect a stream of Portuguese tweets from Twitter API. The app analyzes the tweet text and classifies the sentiment of the text as **positive**, **negative** or **neutral**. The app stores the original tweet text and the resulting sentiment into a CSV file, which is plotted with live updates into an HTML dashboard.
 
 ## Requisites
 To run this app you'll need Python 3 installed and the pip package manager.
@@ -64,7 +64,10 @@ Where:
 
 As we can see, real negatives classified as positives or neutral sum 181 (aprox. 7,7% of 2446 in total), real positives classified as negative or neutral is 400 (aprox. 12,12% of 3300 in total) and real neutral classified as positive or negative is 276 (aprox. 11,25% of 2453 in total), which means that our model seem to guess better negative sentiments than neutral or positive sentiment.
 
-Obs: The commands to validate this numbers are commented on [analyzer.py file](./analyzer.py), feel free to test.
+Obs: The commands to validate this numbers are in the file [accuracy_report.py file](./accuracy_report.py), if you want to execute, do the follow command:
+```python
+python3 accuracy_report.py
+```
 
 ## The versions
 This section contains a brief explanation contextualizing some changes between one version and another. If you want more objective details about the modifications, please check the [CHANGELOG file](./CHANGELOG.md)
