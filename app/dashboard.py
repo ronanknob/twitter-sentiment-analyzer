@@ -1,15 +1,21 @@
 import dash
+import os
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
 import pandas as pd
 from dash.dependencies import Input, Output
+from flask import Flask
 
-app = dash.Dash(__name__, title='Twitter sentiment analyzer')
+server = Flask(__name__)
+app = dash.Dash(server=server, name=__name__, title='Twitter sentiment analyzer')
 
 def _load_data_into_component():
     # Load dataFrame from the CSV
-    df = pd.read_csv(filepath_or_buffer="tweets_output.csv", names=["tweet_text", "sentiment"])
+    df = pd.read_csv("tweets_output.csv", names=["tweet_text", "sentiment"])
+    # OBS: To run local comment the last line and use this command:
+    #df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../app/tweets_output.csv"), names=["tweet_text", "sentiment"])
+
     # Configure the bar chart
     fig = px.bar(df, y="sentiment", barmode="group")
     return fig
@@ -40,4 +46,4 @@ def update_metrics(n):
     return _load_data_into_component()
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host="0.0.0.0", port="8060")

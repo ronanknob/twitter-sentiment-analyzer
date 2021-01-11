@@ -1,11 +1,12 @@
+import os
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from sklearn.model_selection import cross_val_predict
 
-
-dataset = pd.read_csv('tweets_training_set.csv',encoding='utf-8')
+dataset = pd.read_csv(os.path.join(os.path.dirname(__file__), 'app/tweets_training_set.csv'),encoding='utf-8')
 tweets = dataset['Text'].values
 classes = dataset["Classificacao"].values
 vectorizer = CountVectorizer(ngram_range = (1, 2))

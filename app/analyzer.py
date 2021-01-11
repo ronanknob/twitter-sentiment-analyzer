@@ -1,10 +1,12 @@
+import os
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
 def pre_load_training_data():
     # Load training dataset
-    dataset = pd.read_csv('tweets_training_set.csv',encoding='utf-8')
+    dataset = pd.read_csv(os.path.join(os.path.dirname(__file__), 'tweets_training_set.csv'),encoding='utf-8')
     tweets = dataset['Text'].values
     classes = dataset["Classificacao"].values
     return tweets, classes
