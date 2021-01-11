@@ -1,13 +1,8 @@
-import sys
-
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
 from tweepy.streaming import StreamListener
 from csv import writer
-from textblob import TextBlob as tb
-from textblob import exceptions as errors
-from googletrans import Translator
 
 import credentials
 import parser
@@ -47,7 +42,7 @@ class Listener(StreamListener):
         # Do some text cleaning in the tweet text
         tweet_treated = parser.parse_tweet(tweet_text)
         # In this method, we call sentiment analysis and persist the tweet text and the results on a CSV.
-        sentiment = analyzer.classify_tweet(tweet_treated)
+        sentiment = analyzer.classify_tweet(tweet_treated, training_tweets, training_classes)
         # I've removed the commas from tweet text to don't crash csv identation
         self._persist_result(tweet_treated.replace(",",""), sentiment)
 
@@ -58,7 +53,7 @@ class Listener(StreamListener):
 
 # Main flow
 listener = Listener()
-translator = Translator()
+training_tweets, training_classes = analyzer.pre_load_training_data()
 stream = Stream(auth=api.auth, listener=listener)
 try:
     print('Streaming start. Collecting Portuguese tweets...')
