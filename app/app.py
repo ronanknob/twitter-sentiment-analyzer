@@ -1,5 +1,3 @@
-import sys
-
 from tweepy import OAuthHandler
 from tweepy import API
 from tweepy import Stream
